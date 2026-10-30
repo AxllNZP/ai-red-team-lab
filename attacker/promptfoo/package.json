@@ -1,0 +1,8 @@
+{
+  "name": "ai-red-team-lab-attacker",
+  "private": true,
+  "scripts": {
+    "attack": "promptfoo eval --no-cache --repeat 5 --output ../../reports/promptfoo_llm_attacks_results.json",
+    "attack:view": "promptfoo view"
+  }
+}
