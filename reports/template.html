@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>AI Red Team Lab — Reporte de Vulnerabilidades</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 40px; color: #222; }
+    h1 { color: #1a1a2e; border-bottom: 3px solid #e94560; padding-bottom: 10px; }
+    h2 { color: #1a1a2e; margin-top: 40px; }
+    .meta { color: #555; font-size: 0.9em; margin-bottom: 30px; }
+    .summary-table { border-collapse: collapse; width: 100%; margin-bottom: 30px; }
+    .summary-table th, .summary-table td {
+        border: 1px solid #ccc; padding: 8px 12px; text-align: left;
+    }
+    .summary-table th { background-color: #1a1a2e; color: white; }
+    .finding {
+        border: 1px solid #ddd; border-radius: 6px; padding: 20px;
+        margin-bottom: 20px; page-break-inside: avoid;
+    }
+    .finding-header { display: flex; justify-content: space-between; align-items: center; }
+    .severity {
+        display: inline-block; padding: 4px 12px; border-radius: 4px;
+        color: white; font-weight: bold; font-size: 0.85em;
+    }
+    .sev-critica { background-color: #8b0000; }
+    .sev-alta    { background-color: #e94560; }
+    .sev-media   { background-color: #e8a33d; }
+    .sev-baja    { background-color: #4c9f70; }
+    .owasp-tag {
+        font-size: 0.8em; color: #555; background: #f0f0f0;
+        padding: 2px 8px; border-radius: 4px;
+    }
+    .attack-prompt {
+        background: #f7f7f7; border-left: 4px solid #e94560;
+        padding: 10px 15px; font-family: Consolas, monospace;
+        font-size: 0.9em; margin: 10px 0;
+    }
+    .mitigation {
+        background: #eefaf0; border-left: 4px solid #4c9f70;
+        padding: 10px 15px; margin-top: 10px;
+    }
+</style>
+</head>
+<body>
+
+<h1>AI Red Team Lab — Reporte de Vulnerabilidades</h1>
+<div class="meta">
+    Generado el {{ generated_at }} &mdash; Modelo evaluado: {{ model_name }}<br>
+    Herramientas: Promptfoo + Garak &mdash; Marco de referencia: OWASP LLM Top 10
+</div>
+
+<h2>Resumen Ejecutivo</h2>
+<table class="summary-table">
+    <tr><th>Severidad</th><th>Cantidad de hallazgos</th></tr>
+    {% for level, count in severity_summary.items() %}
+    <tr><td>{{ level }}</td><td>{{ count }}</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Hallazgos Detallados</h2>
+{% for f in findings %}
+<div class="finding">
+    <div class="finding-header">
+        <h3>{{ f.id }} — {{ f.title }}</h3>
+        <span class="severity sev-{{ f.severity|lower|replace('í','i') }}">{{ f.severity }}</span>
+    </div>
+    <span class="owasp-tag">{{ f.owasp_category }}</span>
+    <span class="owasp-tag">Herramienta: {{ f.tool }}</span>
+    <span class="owasp-tag">Tasa de éxito: {{ f.success_rate }}</span>
+    <p>{{ f.description }}</p>
+    <div class="attack-prompt">{{ f.attack_prompt }}</div>
+    <div class="mitigation"><strong>Mitigación recomendada:</strong> {{ f.mitigation }}</div>
+</div>
+{% endfor %}
+
+</body>
