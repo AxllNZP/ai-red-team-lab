@@ -1,8 +1,10 @@
-import os
 import requests
+import os
 
-# Cargar el system prompt de forma dinámica desde system_prompt.txt
-_SYSTEM_PROMPT_PATH = os.path.join(os.path.dirname(__file__), "system_prompt.txt")
+_VERSION = os.environ.get("SYSTEM_PROMPT_VERSION", "v1")
+_FILENAME = "system_prompt.txt" if _VERSION == "v1" else f"system_prompt_{_VERSION}.txt"
+_SYSTEM_PROMPT_PATH = os.path.join(os.path.dirname(__file__), _FILENAME)
+
 with open(_SYSTEM_PROMPT_PATH, "r", encoding="utf-8") as f:
     SYSTEM_PROMPT = f.read()
 

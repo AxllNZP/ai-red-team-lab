@@ -1,7 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const SYSTEM_PROMPT_PATH = path.join(__dirname, "..", "..", "target", "system_prompt.txt");
+const version = process.env.SYSTEM_PROMPT_VERSION || "v1";
+const filename = version === "v1" ? "system_prompt.txt" : `system_prompt_${version}.txt`;
+const SYSTEM_PROMPT_PATH = path.join(__dirname, "..", "..", "target", filename);
 const SYSTEM_PROMPT = fs.readFileSync(SYSTEM_PROMPT_PATH, "utf-8");
 
 class OllamaProvider {
