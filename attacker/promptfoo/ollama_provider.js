@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { sanitizeResponse } = require("./output_guardrail");
 
 const version = process.env.SYSTEM_PROMPT_VERSION || "v1";
 const filename = version === "v1" ? "system_prompt.txt" : `system_prompt_${version}.txt`;
@@ -30,7 +31,13 @@ class OllamaProvider {
     });
 
     const data = await response.json();
-    return { output: data.message.content };
+    const { text, detected } = sanitizeResponse(data.message.content);
+
+    if (detected.length > 0) {
+      console.warn(`⚠️  Guardrail bloqueó una fuga: ${detected.join(", ")}`);
+    }
+
+    return { output: text };
   }
 }
 

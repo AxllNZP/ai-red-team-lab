@@ -4,6 +4,7 @@
   "scripts": {
     "attack": "promptfoo eval --no-cache --repeat 5 --output ../../reports/promptfoo_llm_attacks_results.json",
     "attack:v2hardened": "promptfoo eval --no-cache --repeat 5 --output ../../reports/promptfoo_llm_attacks_results_v2_hardened.json",
+    "attack:v2hardened-guardrail": "promptfoo eval --no-cache --repeat 5 --output ../../reports/promptfoo_llm_attacks_results_v2_hardened_guardrail.json",
     "attack:view": "promptfoo view"
   }
 }

@@ -1,5 +1,6 @@
 import requests
 import os
+from output_guardrail import sanitize_response
 
 _VERSION = os.environ.get("SYSTEM_PROMPT_VERSION", "v1")
 _FILENAME = "system_prompt.txt" if _VERSION == "v1" else f"system_prompt_{_VERSION}.txt"
@@ -12,21 +13,19 @@ OLLAMA_URL = "http://localhost:11434/api/chat"
 MODEL = "qwen2.5:1.5b"
 
 def ask_ollama(messages):
-    """
-    messages: lista de dicts tipo [{"role": "user", "content": "..."}]
-    Devuelve el texto de la respuesta del modelo.
-    """
     response = requests.post(
         OLLAMA_URL,
-        json={
-            "model": MODEL,
-            "messages": messages,
-            "stream": False
-        }
+        json={"model": MODEL, "messages": messages, "stream": False}
     )
     response.raise_for_status()
     data = response.json()
-    return data["message"]["content"]
+    raw_text = data["message"]["content"]
+
+    sanitized_text, detected = sanitize_response(raw_text)
+    if detected:
+        print(f"⚠️  Guardrail bloqueó una fuga: {detected}")
+
+    return sanitized_text
 
 
 if __name__ == "__main__":
